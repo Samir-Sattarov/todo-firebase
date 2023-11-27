@@ -1,3 +1,5 @@
+// ignore_for_file: invalid_return_type_for_catch_error
+
 import 'package:cloud_firestore/cloud_firestore.dart';
 
 class FirestoreApi {
