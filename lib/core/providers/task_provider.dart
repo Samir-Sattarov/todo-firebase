@@ -9,6 +9,15 @@ class TaskProvider extends ChangeNotifier {
   List<TaskEntity> listTask = [];
   final FirestoreApi _api = FirestoreApi();
 
+  createTask(TaskEntity task) async {
+    final result = await _api.post(
+      collection: CollectionConstants.tTaskCollection,
+      params: task.toJson(),
+    );
+
+    notifyListeners();
+  }
+
   fetchTasks() async {
     listTask.clear();
     final QuerySnapshot<Map<String, dynamic>> data =

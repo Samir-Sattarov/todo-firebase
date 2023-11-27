@@ -10,4 +10,13 @@ class TaskEntity {
       description: json['description'],
     );
   }
+
+  Map<String, dynamic> toJson() {
+    final Map<String, dynamic> data = {};
+
+    data['title'] = title;
+    data['description'] = description;
+
+    return data;
+  }
 }

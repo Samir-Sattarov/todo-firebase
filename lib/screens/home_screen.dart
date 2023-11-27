@@ -1,6 +1,8 @@
 import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
 import 'package:todo_firebase/core/providers/task_provider.dart';
+import 'package:todo_firebase/screens/create_task_screen.dart';
+import 'package:todo_firebase/widgets/task_card_widget.dart';
 
 class HomeScreen extends StatefulWidget {
   const HomeScreen({super.key});
@@ -12,6 +14,7 @@ class HomeScreen extends StatefulWidget {
 class _HomeScreenState extends State<HomeScreen> {
   @override
   void initState() {
+    fetchData();
     super.initState();
   }
 
@@ -35,32 +38,28 @@ class _HomeScreenState extends State<HomeScreen> {
           )
         ],
       ),
-      body: Center(
-        child: Consumer<TaskProvider>(
-          builder: (_, data, child) {
-            return Column(
-              mainAxisAlignment: MainAxisAlignment.center,
-              children: <Widget>[
-                ...List.generate(
-                  data.listTask.length,
-                  (index) {
-                    final element = data.listTask[index];
-                    return Container(
-                      padding: const EdgeInsets.all(10),
-                      child: Column(
-                        children: [
-                          Text(element.title),
-                          const SizedBox(height: 10),
-                          Text(element.description),
-                        ],
-                      ),
-                    );
-                  },
-                ),
-              ],
-            );
-          },
-        ),
+      body: Consumer<TaskProvider>(
+        builder: (_, data, child) {
+          return ListView.builder(
+            physics: const ClampingScrollPhysics(),
+            itemCount: data.listTask.length,
+            itemBuilder: (_, index) {
+              final element = data.listTask[index];
+              return TaskCardWidget(task: element);
+            },
+          );
+        },
+      ),
+      floatingActionButton: FloatingActionButton(
+        onPressed: () {
+          Navigator.push(
+            context,
+            MaterialPageRoute(
+              builder: (_) => const CreateTaskScreen(),
+            ),
+          );
+        },
+        child: const Icon(Icons.add),
       ),
     );
   }
