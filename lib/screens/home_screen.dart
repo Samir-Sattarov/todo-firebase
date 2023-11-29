@@ -1,5 +1,7 @@
 import 'package:flutter/material.dart';
+import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:provider/provider.dart';
+import 'package:todo_firebase/core/cubits/error_dialog_cubit.dart';
 import 'package:todo_firebase/core/providers/task_provider.dart';
 import 'package:todo_firebase/screens/create_task_screen.dart';
 import 'package:todo_firebase/widgets/task_card_widget.dart';
@@ -45,7 +47,9 @@ class _HomeScreenState extends State<HomeScreen> {
             itemCount: data.listTask.length,
             itemBuilder: (_, index) {
               final element = data.listTask[index];
-              return TaskCardWidget(task: element);
+              return TaskCardWidget(task: element, onTap: (entity) {
+                Provider.of<TaskProvider>(context, listen: false).deleteTask(entity);
+              },);
             },
           );
         },

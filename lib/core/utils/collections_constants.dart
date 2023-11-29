@@ -1,3 +1,3 @@
 class CollectionConstants {
-  static const tTaskCollection = "test";
+  static const tTaskCollection = "tasks";
 }

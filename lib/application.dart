@@ -1,7 +1,10 @@
 import 'package:flutter/material.dart';
+import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:provider/provider.dart';
-import 'package:todo_firebase/core/providers/task_provider.dart';
+import 'package:todo_firebase/core/cubits/error_dialog_cubit.dart';
+import 'package:todo_firebase/screens/main_screen.dart';
 
+import 'core/providers/task_provider.dart';
 import 'screens/home_screen.dart';
 
 class Application extends StatelessWidget {
@@ -11,7 +14,8 @@ class Application extends StatelessWidget {
   Widget build(BuildContext context) {
     return MultiProvider(
       providers: [
-        ChangeNotifierProvider(create: (_) => TaskProvider()),
+        BlocProvider(create: (context) => ErrorDialogCubit(),),
+        ChangeNotifierProvider(create: (local) => TaskProvider(context: local)),
       ],
       child: MaterialApp(
         title: 'Flutter Demo',
@@ -19,7 +23,7 @@ class Application extends StatelessWidget {
           useMaterial3: false,
           primarySwatch: Colors.blue,
         ),
-        home: const HomeScreen(),
+        home: const MainScreen(),
       ),
     );
   }

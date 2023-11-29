@@ -3,6 +3,7 @@ import 'package:provider/provider.dart';
 import 'package:todo_firebase/core/entity/task_entity.dart';
 
 import '../core/providers/task_provider.dart';
+import '../main.dart';
 
 class CreateTaskScreen extends StatefulWidget {
   const CreateTaskScreen({super.key});
@@ -40,6 +41,7 @@ class _CreateTaskScreenState extends State<CreateTaskScreen> {
                   final task = TaskEntity(
                     title: controllerTitle.text,
                     description: controllerDescription.text,
+                    id: uuid.v4(),
                   );
 
                   Provider.of<TaskProvider>(context, listen: false)

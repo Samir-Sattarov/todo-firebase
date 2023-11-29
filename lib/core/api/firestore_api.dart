@@ -11,7 +11,7 @@ class FirestoreApi {
   }) async {
     print("send data");
 
-    instance.collection(collection).add(params)
+    instance.collection(collection).doc(params['id']).set(params)
       ..then((value) => print("Data saved"))
       ..catchError((error) async {
         print("Error $error");
@@ -19,6 +19,19 @@ class FirestoreApi {
       });
 
     return true;
+  }
+
+ Future<void> delete({required String id, required String collection}) async {
+
+   await instance
+        .collection(collection)
+        .doc(id)
+        .delete()
+     .then((value) => print("Data saved"))
+     .catchError((error) async {
+       print("Error $error");
+       return Future.value(false);
+     });
   }
 
   Future<QuerySnapshot<Map<String, dynamic>>> get({
