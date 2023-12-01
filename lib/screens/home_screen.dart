@@ -14,6 +14,32 @@ class HomeScreen extends StatefulWidget {
 }
 
 class _HomeScreenState extends State<HomeScreen> {
+
+  @override
+  void initState() {
+
+
+    super.initState();
+  }
+
+
+
+
+  @override
+  Widget build(BuildContext context) {
+   return  const _ContentWidget();
+  }
+}
+
+
+class _ContentWidget extends StatefulWidget {
+  const _ContentWidget({Key? key}) : super(key: key);
+
+  @override
+  State<_ContentWidget> createState() => _ContentWidgetState();
+}
+
+class _ContentWidgetState extends State<_ContentWidget> {
   @override
   void initState() {
     fetchData();
@@ -23,7 +49,6 @@ class _HomeScreenState extends State<HomeScreen> {
   fetchData() async {
     Provider.of<TaskProvider>(context, listen: false).fetchTasks();
   }
-
   @override
   Widget build(BuildContext context) {
     return Scaffold(
@@ -66,5 +91,6 @@ class _HomeScreenState extends State<HomeScreen> {
         child: const Icon(Icons.add),
       ),
     );
+
   }
 }

@@ -1,11 +1,10 @@
 
-
 import 'dart:async';
 
 import 'package:flutter_bloc/flutter_bloc.dart';
 
-class ErrorDialogCubit extends Cubit<bool> {
-  ErrorDialogCubit() : super(false);
+class SuccessDialogCubit extends Cubit<bool> {
+  SuccessDialogCubit() : super(false);
 
 
   enable() {
@@ -15,5 +14,4 @@ class ErrorDialogCubit extends Cubit<bool> {
   }
 
   _disable() => emit(false);
-
 }
