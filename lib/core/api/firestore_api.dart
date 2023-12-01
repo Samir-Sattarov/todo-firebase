@@ -5,6 +5,7 @@ import 'package:cloud_firestore/cloud_firestore.dart';
 class FirestoreApi {
   FirebaseFirestore instance = FirebaseFirestore.instance;
 
+
   Future<bool> post({
     required String collection,
     required Map<String, dynamic> params,

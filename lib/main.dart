@@ -4,6 +4,7 @@ import 'package:uuid/uuid.dart';
 
 import 'application.dart';
 import 'firebase_options.dart';
+import 'locator.dart';
 
 
 const uuid = Uuid();
@@ -14,5 +15,7 @@ void main() async {
   await Firebase.initializeApp(
     options: DefaultFirebaseOptions.currentPlatform,
   );
+
+  setup();
   runApp(const Application());
 }

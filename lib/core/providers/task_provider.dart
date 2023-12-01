@@ -13,12 +13,13 @@ import '../entity/task_entity.dart';
 
 class TaskProvider extends ChangeNotifier {
   final List<TaskEntity> listTask = [];
-  final FirestoreApi _api = FirestoreApi();
 
   final SuccessDialogCubit successDialogCubit;
   final ErrorDialogCubit errorDialogCubit;
 
-  TaskProvider({required this.successDialogCubit, required this.errorDialogCubit});
+  final FirestoreApi _api ;
+
+  TaskProvider(this._api, this.successDialogCubit,this.errorDialogCubit);
 
 
   createTask(TaskEntity task) async {

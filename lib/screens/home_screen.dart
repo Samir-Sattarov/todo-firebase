@@ -6,6 +6,8 @@ import 'package:todo_firebase/core/providers/task_provider.dart';
 import 'package:todo_firebase/screens/create_task_screen.dart';
 import 'package:todo_firebase/widgets/task_card_widget.dart';
 
+import '../locator.dart';
+
 class HomeScreen extends StatefulWidget {
   const HomeScreen({super.key});
 
@@ -15,19 +17,22 @@ class HomeScreen extends StatefulWidget {
 
 class _HomeScreenState extends State<HomeScreen> {
 
+
+  late TaskProvider taskProvider;
+
   @override
   void initState() {
-
-
+    taskProvider = locator();
     super.initState();
   }
 
 
-
-
   @override
   Widget build(BuildContext context) {
-   return  const _ContentWidget();
+    return ChangeNotifierProvider(
+      create: (context) => taskProvider,
+      child: const _ContentWidget(),
+    );
   }
 }
 
@@ -49,6 +54,7 @@ class _ContentWidgetState extends State<_ContentWidget> {
   fetchData() async {
     Provider.of<TaskProvider>(context, listen: false).fetchTasks();
   }
+
   @override
   Widget build(BuildContext context) {
     return Scaffold(
@@ -73,7 +79,8 @@ class _ContentWidgetState extends State<_ContentWidget> {
             itemBuilder: (_, index) {
               final element = data.listTask[index];
               return TaskCardWidget(task: element, onTap: (entity) {
-                Provider.of<TaskProvider>(context, listen: false).deleteTask(entity);
+                Provider.of<TaskProvider>(context, listen: false).deleteTask(
+                    entity);
               },);
             },
           );
@@ -91,6 +98,5 @@ class _ContentWidgetState extends State<_ContentWidget> {
         child: const Icon(Icons.add),
       ),
     );
-
   }
 }
