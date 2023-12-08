@@ -5,12 +5,14 @@ import '../core/entity/task_entity.dart';
 class TaskCardWidget extends StatelessWidget {
   final TaskEntity task;
   final Function(TaskEntity) onTap;
-  const TaskCardWidget({super.key, required this.task, required this.onTap});
+  final Function(TaskEntity) onDoubleTap;
+  const TaskCardWidget({super.key, required this.task, required this.onTap, required this.onDoubleTap});
 
   @override
   Widget build(BuildContext context) {
     return GestureDetector(
       onTap:() => onTap.call(task),
+      onDoubleTap:() => onDoubleTap.call(task),
       child: Container(
         width: MediaQuery.of(context).size.width,
         padding: const EdgeInsets.all(10),

@@ -3,6 +3,7 @@ import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:provider/provider.dart';
 import 'package:todo_firebase/core/cubits/error_dialog_cubit.dart';
 import 'package:todo_firebase/core/cubits/success_dialog_cubit.dart';
+import 'package:todo_firebase/core/cubits/task/task_cubit.dart';
 import 'package:todo_firebase/locator.dart';
 import 'package:todo_firebase/screens/main_screen.dart';
 
@@ -20,12 +21,14 @@ class _ApplicationState extends State<Application> {
   late ErrorDialogCubit errorDialogCubit;
   late SuccessDialogCubit successDialogCubit;
   late TaskProvider taskProvider;
+  late TaskCubit taskCubit;
 
   @override
   void initState() {
     errorDialogCubit= locator();
     successDialogCubit= locator();
     taskProvider= locator();
+    taskCubit= locator();
     super.initState();
   }
 
@@ -36,6 +39,7 @@ class _ApplicationState extends State<Application> {
       providers: [
         BlocProvider(create: (context) => errorDialogCubit),
         BlocProvider(create: (context) => successDialogCubit),
+        BlocProvider(create: (context) => taskCubit),
         ChangeNotifierProvider(create: (local) => taskProvider),
       ],
       child: MaterialApp(

@@ -7,22 +7,35 @@ import '../core/cubits/task/task_cubit.dart';
 import '../core/providers/task_provider.dart';
 import '../main.dart';
 
-class CreateTaskScreen extends StatefulWidget {
-  const CreateTaskScreen({super.key});
+class UpdateTaskScreen extends StatefulWidget {
+
+  final TaskEntity task;
+  const UpdateTaskScreen({super.key, required this.task});
 
   @override
-  State<CreateTaskScreen> createState() => _CreateTaskScreenState();
+  State<UpdateTaskScreen> createState() => _UpdateTaskScreenState();
 }
 
-class _CreateTaskScreenState extends State<CreateTaskScreen> {
+class _UpdateTaskScreenState extends State<UpdateTaskScreen> {
   final TextEditingController controllerTitle = TextEditingController();
   final TextEditingController controllerDescription = TextEditingController();
+
+  @override
+  void initState() {
+    initialize();
+    super.initState();
+  }
+
+  initialize() {
+    controllerTitle.text = widget.task.title;
+    controllerDescription.text = widget.task.description;
+  }
 
   @override
   Widget build(BuildContext context) {
     return Scaffold(
       appBar: AppBar(
-        title: const Text("Create task"),
+        title: const Text("Update task"),
       ),
       body: Padding(
         padding: const EdgeInsets.all(8.0),
@@ -43,15 +56,15 @@ class _CreateTaskScreenState extends State<CreateTaskScreen> {
                   final task = TaskEntity(
                     title: controllerTitle.text,
                     description: controllerDescription.text,
-                    id: uuid.v4(),
+                    id: widget.task.id,
                   );
 
-                  BlocProvider.of<TaskCubit>(context, listen: false)
-                      .createTask(task);
+                  BlocProvider.of<TaskCubit>(context )
+                      .updateTask(task);
 
                   Navigator.pop(context);
                 },
-                child: const Text("create"),
+                child: const Text("Update"),
               ),
             ),
           ],

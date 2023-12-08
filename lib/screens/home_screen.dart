@@ -2,10 +2,14 @@ import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:provider/provider.dart';
 import 'package:todo_firebase/core/cubits/error_dialog_cubit.dart';
+import 'package:todo_firebase/core/cubits/task/task_cubit.dart';
 import 'package:todo_firebase/core/providers/task_provider.dart';
 import 'package:todo_firebase/screens/create_task_screen.dart';
+import 'package:todo_firebase/screens/update_task_screen.dart';
+import 'package:todo_firebase/widgets/error_flash_bar.dart';
 import 'package:todo_firebase/widgets/task_card_widget.dart';
 
+import '../core/entity/task_entity.dart';
 import '../locator.dart';
 
 class HomeScreen extends StatefulWidget {
@@ -16,26 +20,16 @@ class HomeScreen extends StatefulWidget {
 }
 
 class _HomeScreenState extends State<HomeScreen> {
-
-
-  late TaskProvider taskProvider;
-
   @override
   void initState() {
-    taskProvider = locator();
     super.initState();
   }
 
-
   @override
   Widget build(BuildContext context) {
-    return ChangeNotifierProvider(
-      create: (context) => taskProvider,
-      child: const _ContentWidget(),
-    );
+    return const _ContentWidget();
   }
 }
-
 
 class _ContentWidget extends StatefulWidget {
   const _ContentWidget({Key? key}) : super(key: key);
@@ -45,15 +39,15 @@ class _ContentWidget extends StatefulWidget {
 }
 
 class _ContentWidgetState extends State<_ContentWidget> {
+  List<TaskEntity> listTasks = [];
+
   @override
   void initState() {
-    fetchData();
+    refresh();
     super.initState();
   }
 
-  fetchData() async {
-    Provider.of<TaskProvider>(context, listen: false).fetchTasks();
-  }
+  refresh() => BlocProvider.of<TaskCubit>(context).load();
 
   @override
   Widget build(BuildContext context) {
@@ -62,26 +56,69 @@ class _ContentWidgetState extends State<_ContentWidget> {
         title: const Text("Firebase"),
         actions: [
           IconButton(
-            onPressed: () {
-              fetchData();
-            },
+            onPressed: () => refresh(),
             icon: const Icon(
               Icons.cloud,
             ),
           )
         ],
       ),
-      body: Consumer<TaskProvider>(
-        builder: (_, data, child) {
+      body: BlocConsumer<TaskCubit, TaskState>(
+        listener: (context, state) {
+          if (state is TaskError) {
+            ErrorFlushBar(state.message).show(context);
+          }
+        },
+        builder: (context, state) {
+          if (state is TaskLoaded) {
+            listTasks = state.tasks;
+          } else if (state is TaskSaved) {
+            final index = listTasks
+                .indexWhere((element) => element.id == state.taskEntity.id);
+
+            if (index == -1) {
+              listTasks.add(state.taskEntity);
+            } else {
+              listTasks[index] = state.taskEntity;
+            }
+          } else if (state is TaskDeleted) {
+            listTasks.removeWhere((element) => element.id == state.id);
+          }
+
+          if (state is TaskLoading) {
+            return const Center(
+              child: CircularProgressIndicator(),
+            );
+          }
+
+          if (listTasks.isEmpty) {
+            return const Center(
+                child: Text(
+              "Empty...",
+              style: TextStyle(color: Colors.black),
+            ));
+          }
+
           return ListView.builder(
             physics: const ClampingScrollPhysics(),
-            itemCount: data.listTask.length,
+            itemCount: listTasks.length,
             itemBuilder: (_, index) {
-              final element = data.listTask[index];
-              return TaskCardWidget(task: element, onTap: (entity) {
-                Provider.of<TaskProvider>(context, listen: false).deleteTask(
-                    entity);
-              },);
+              final element = listTasks[index];
+              return TaskCardWidget(
+                task: element,
+                onDoubleTap: (entity) {
+                  BlocProvider.of<TaskCubit>(context, listen: false)
+                      .deleteTask(entity.id);
+                },
+                onTap: (entity) {
+                  Navigator.push(
+                    context,
+                    MaterialPageRoute(
+                      builder: (context) => UpdateTaskScreen(task: entity),
+                    ),
+                  );
+                },
+              );
             },
           );
         },
